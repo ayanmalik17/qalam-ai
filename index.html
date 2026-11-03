@@ -1,178 +1,154 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ku" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Qalam AI</title>
-
 <style>
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  min-height: 100vh;
-  background: #080d1b;
-  color: white;
-  font-family: Arial, sans-serif;
-}
-
-header {
-  padding: 20px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  border-bottom: 1px solid #26344c;
-}
-
-.logo {
-  background: linear-gradient(135deg,#2879ed,#36c7df);
-  padding: 12px 17px;
-  border-radius: 14px;
-  font-size: 25px;
-  font-weight: bold;
-}
-
-h1 {
-  font-size: 21px;
-}
-
-main {
-  max-width: 750px;
-  margin: auto;
-  padding: 25px;
-  text-align: center;
-}
-
-h2 {
-  margin-top: 100px;
-  font-size: 38px;
-}
-
-h2 span {
-  color: #55baff;
-}
-
-p {
-  color: #9aaac4;
-  line-height: 1.7;
-}
-
-.chat {
-  margin-top: 45px;
-  display: flex;
-  gap: 10px;
-  background: #111e34;
-  padding: 12px;
-  border: 1px solid #263d5d;
-  border-radius: 18px;
-}
-
-input {
-  flex: 1;
-  min-width: 0;
-  background: transparent;
-  border: none;
-  outline: none;
-  color: white;
-  font-size: 16px;
-  padding: 10px;
-}
-
-button {
-  background: linear-gradient(135deg,#4da3ff,#58d5e8);
-  border: none;
-  padding: 13px 19px;
-  border-radius: 12px;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-#messages {
-  text-align: left;
-  margin-top: 30px;
-}
-
-.message {
-  background: #111e34;
-  padding: 15px;
-  border-radius: 15px;
-  margin: 12px 0;
-  overflow-wrap: anywhere;
-}
-
-.user {
-  background: #16345b;
-}
-
-footer {
-  text-align: center;
-  color: #71819b;
-  padding: 30px;
-  font-size: 12px;
+*{box-sizing:border-box}
+body{margin:0;background:#080d1b;color:white;font-family:Arial,sans-serif;height:100vh;display:flex}
+.sidebar{width:260px;background:#10182b;padding:18px;display:flex;flex-direction:column;border-left:1px solid #26344d}
+.logo{font-size:27px;font-weight:bold;color:#54aaff;margin-bottom:25px}
+button{cursor:pointer;border:0;border-radius:10px;padding:12px;color:white;background:#1769d2;font-size:15px}
+.new{width:100%;margin-bottom:20px}
+.history{overflow:auto;flex:1}
+.chatitem{display:flex;align-items:center;gap:6px;margin:5px 0}
+.chatitem button:first-child{background:#202d45;text-align:right;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chatitem .del{background:#472735;padding:10px}
+.main{flex:1;display:flex;flex-direction:column;min-width:0}
+header{padding:18px 22px;border-bottom:1px solid #26344d;font-size:20px;font-weight:bold}
+.messages{flex:1;overflow:auto;padding:24px;display:flex;flex-direction:column;gap:14px}
+.msg{max-width:85%;padding:14px 17px;border-radius:16px;line-height:1.7;white-space:pre-wrap}
+.user{background:#155bb2;align-self:flex-start}
+.bot{background:#18243a;align-self:flex-end}
+.welcome{text-align:center;margin:auto;color:#a9c7ed;line-height:2}
+.welcome h1{font-size:34px;color:#54aaff}
+.inputarea{padding:16px;display:flex;gap:10px;border-top:1px solid #26344d}
+input{flex:1;min-width:0;background:#17233a;border:1px solid #344767;border-radius:12px;padding:15px;color:white;font-size:16px;outline:none}
+.send{min-width:75px}
+.note{text-align:center;color:#8193ad;font-size:11px;padding:0 10px 10px}
+@media(max-width:650px){
+.sidebar{width:125px;padding:10px}
+.logo{font-size:19px}
+.chatitem{gap:3px}
+.chatitem button{font-size:11px;padding:9px 5px}
+.chatitem .del{padding:9px 5px}
+.new{font-size:12px;padding:10px 3px}
+.messages{padding:14px}
+header{font-size:17px}
 }
 </style>
 </head>
-
 <body>
+<aside class="sidebar">
+<div class="logo">✦ Qalam AI</div>
+<button class="new" onclick="newChat()">＋ چاتی نوێ</button>
+<div style="color:#91a8ca;margin-bottom:8px">مێژووی چاتەکان</div>
+<div class="history" id="history"></div>
+</aside>
 
-<header>
-  <div class="logo">Q</div>
-  <div>
-    <strong>Qalam AI</strong>
-    <p>Your Kurdish AI Assistant</p>
-  </div>
-</header>
-
-<main>
-  <h2>Welcome to <span>Qalam AI</span></h2>
-
-  <p>
-    یاریدەدەری زیرەکی دەستکردی تۆ.
-    بە کوردی یان ئینگلیزی پرسیار بکە.
-  </p>
-
-  <div id="messages"></div>
-
-  <div class="chat">
-    <input
-      id="question"
-      placeholder="پرسیارەکەت بنووسە..."
-    >
-    <button onclick="sendMessage()">➤</button>
-  </div>
+<main class="main">
+<header>Qalam AI <span style="color:#55aaff">●</span></header>
+<div class="messages" id="messages"></div>
+<form class="inputarea" id="form">
+<input id="prompt" placeholder="پرسیارەکەت بنووسە..." autocomplete="off">
+<button class="send">ناردن</button>
+</form>
+<div class="note">Qalam AI — یاریدەدەری زیرەکی دەستکرد</div>
 </main>
 
-<footer>
-  Qalam AI © 2026
-</footer>
-
 <script>
-function sendMessage() {
-  const input = document.getElementById("question");
-  const messages = document.getElementById("messages");
+let chats = JSON.parse(localStorage.getItem("qalam_chats") || "[]");
+let active = null;
 
-  const question = input.value.trim();
-
-  if (!question) return;
-
-  const user = document.createElement("div");
-  user.className = "message user";
-  user.textContent = question;
-
-  messages.appendChild(user);
-
-  const answer = document.createElement("div");
-  answer.className = "message";
-  answer.textContent =
-    "Welcome! Qalam AI is getting ready. Real AI connection will be added in the next step.";
-
-  messages.appendChild(answer);
-
-  input.value = "";
+function save(){
+ localStorage.setItem("qalam_chats",JSON.stringify(chats));
 }
-</script>
 
+function newChat(){
+ const chat={id:Date.now(),title:"چاتی نوێ",messages:[]};
+ chats.unshift(chat);
+ active=chat.id;
+ save();
+ render();
+}
+
+function openChat(id){
+ active=id;
+ render();
+}
+
+function deleteChat(id){
+ chats=chats.filter(c=>c.id!==id);
+ if(active===id) active=chats.length?chats[0].id:null;
+ save();
+ render();
+}
+
+function currentChat(){
+ return chats.find(c=>c.id===active);
+}
+
+function render(){
+ const list=document.getElementById("history");
+ list.innerHTML="";
+ chats.forEach(c=>{
+  const row=document.createElement("div");
+  row.className="chatitem";
+  const open=document.createElement("button");
+  open.textContent=c.title;
+  open.onclick=()=>openChat(c.id);
+  const del=document.createElement("button");
+  del.className="del";
+  del.textContent="×";
+  del.title="سڕینەوە";
+  del.onclick=()=>deleteChat(c.id);
+  row.append(open,del);
+  list.append(row);
+ });
+
+ const area=document.getElementById("messages");
+ area.innerHTML="";
+ const chat=currentChat();
+
+ if(!chat || chat.messages.length===0){
+  area.innerHTML='<div class="welcome"><h1>✦ Qalam AI</h1><div>بەخێربێیت بۆ قەڵەم AI</div><div>پرسیارەکەت لێرە بنووسە...</div></div>';
+ }else{
+  chat.messages.forEach(m=>{
+   const div=document.createElement("div");
+   div.className="msg "+(m.role==="user"?"user":"bot");
+   div.textContent=m.text;
+   area.append(div);
+  });
+ }
+ area.scrollTop=area.scrollHeight;
+}
+
+document.getElementById("form").addEventListener("submit",function(e){
+ e.preventDefault();
+ const input=document.getElementById("prompt");
+ const text=input.value.trim();
+ if(!text)return;
+ if(!currentChat())newChat();
+ const chat=currentChat();
+ chat.messages.push({role:"user",text:text});
+ if(chat.messages.length===1)chat.title=text.slice(0,24);
+ chat.messages.push({
+  role:"assistant",
+  text:"سوپاس بۆ پەیامەکەت! بەشی چات و مێژووی Qalam AI کار دەکات. بەشی AI ـی ڕاستەقینە هێشتا پێویستی بە بەستنەوەی مۆدێلی AI هەیە."
+ });
+ input.value="";
+ save();
+ render();
+});
+
+if(chats.length){
+ active=chats[0].id;
+}else{
+ newChat();
+}
+render();
+</script>
 </body>
 </html>
