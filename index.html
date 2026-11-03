@@ -5,150 +5,450 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Qalam AI</title>
+
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#080d1b;color:white;font-family:Arial,sans-serif;height:100vh;display:flex}
-.sidebar{width:260px;background:#10182b;padding:18px;display:flex;flex-direction:column;border-left:1px solid #26344d}
-.logo{font-size:27px;font-weight:bold;color:#54aaff;margin-bottom:25px}
-button{cursor:pointer;border:0;border-radius:10px;padding:12px;color:white;background:#1769d2;font-size:15px}
-.new{width:100%;margin-bottom:20px}
-.history{overflow:auto;flex:1}
-.chatitem{display:flex;align-items:center;gap:6px;margin:5px 0}
-.chatitem button:first-child{background:#202d45;text-align:right;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.chatitem .del{background:#472735;padding:10px}
-.main{flex:1;display:flex;flex-direction:column;min-width:0}
-header{padding:18px 22px;border-bottom:1px solid #26344d;font-size:20px;font-weight:bold}
-.messages{flex:1;overflow:auto;padding:24px;display:flex;flex-direction:column;gap:14px}
-.msg{max-width:85%;padding:14px 17px;border-radius:16px;line-height:1.7;white-space:pre-wrap}
-.user{background:#155bb2;align-self:flex-start}
-.bot{background:#18243a;align-self:flex-end}
-.welcome{text-align:center;margin:auto;color:#a9c7ed;line-height:2}
-.welcome h1{font-size:34px;color:#54aaff}
-.inputarea{padding:16px;display:flex;gap:10px;border-top:1px solid #26344d}
-input{flex:1;min-width:0;background:#17233a;border:1px solid #344767;border-radius:12px;padding:15px;color:white;font-size:16px;outline:none}
-.send{min-width:75px}
-.note{text-align:center;color:#8193ad;font-size:11px;padding:0 10px 10px}
+
+body{
+ margin:0;
+ background:#080d1b;
+ color:white;
+ font-family:Arial,sans-serif;
+ height:100vh;
+ display:flex;
+}
+
+.sidebar{
+ width:260px;
+ background:#10182b;
+ padding:18px;
+ display:flex;
+ flex-direction:column;
+ border-left:1px solid #26344d;
+}
+
+.logo{
+ font-size:27px;
+ font-weight:bold;
+ color:#54aaff;
+ margin-bottom:25px;
+}
+
+button{
+ cursor:pointer;
+ border:0;
+ border-radius:10px;
+ padding:12px;
+ color:white;
+ background:#1769d2;
+ font-size:15px;
+}
+
+button:disabled{
+ opacity:.5;
+ cursor:not-allowed;
+}
+
+.new{
+ width:100%;
+ margin-bottom:20px;
+}
+
+.history{
+ overflow:auto;
+ flex:1;
+}
+
+.chatitem{
+ display:flex;
+ align-items:center;
+ gap:6px;
+ margin:5px 0;
+}
+
+.chatitem button:first-child{
+ background:#202d45;
+ text-align:right;
+ flex:1;
+ overflow:hidden;
+ text-overflow:ellipsis;
+ white-space:nowrap;
+}
+
+.chatitem .del{
+ background:#472735;
+ padding:10px;
+}
+
+.main{
+ flex:1;
+ display:flex;
+ flex-direction:column;
+ min-width:0;
+}
+
+header{
+ padding:18px 22px;
+ border-bottom:1px solid #26344d;
+ font-size:20px;
+ font-weight:bold;
+ display:flex;
+ justify-content:space-between;
+}
+
+.status{
+ color:#65d69b;
+ font-size:12px;
+}
+
+.messages{
+ flex:1;
+ overflow:auto;
+ padding:24px;
+ display:flex;
+ flex-direction:column;
+ gap:14px;
+}
+
+.msg{
+ max-width:85%;
+ padding:14px 17px;
+ border-radius:16px;
+ line-height:1.8;
+ white-space:pre-wrap;
+ overflow-wrap:anywhere;
+}
+
+.user{
+ background:#155bb2;
+ align-self:flex-start;
+}
+
+.bot{
+ background:#18243a;
+ align-self:flex-end;
+}
+
+.welcome{
+ text-align:center;
+ margin:auto;
+ color:#a9c7ed;
+ line-height:2;
+}
+
+.welcome h1{
+ font-size:34px;
+ color:#54aaff;
+}
+
+.inputarea{
+ padding:16px;
+ display:flex;
+ gap:10px;
+ border-top:1px solid #26344d;
+}
+
+input{
+ flex:1;
+ min-width:0;
+ background:#17233a;
+ border:1px solid #344767;
+ border-radius:12px;
+ padding:15px;
+ color:white;
+ font-size:16px;
+ outline:none;
+}
+
+.send{
+ min-width:75px;
+}
+
+.note{
+ text-align:center;
+ color:#8193ad;
+ font-size:11px;
+ padding:0 10px 10px;
+}
+
 @media(max-width:650px){
-.sidebar{width:125px;padding:10px}
-.logo{font-size:19px}
-.chatitem{gap:3px}
-.chatitem button{font-size:11px;padding:9px 5px}
-.chatitem .del{padding:9px 5px}
-.new{font-size:12px;padding:10px 3px}
-.messages{padding:14px}
-header{font-size:17px}
+ .sidebar{
+  width:125px;
+  padding:10px;
+ }
+ .logo{font-size:19px}
+ .chatitem{gap:3px}
+ .chatitem button{font-size:11px;padding:9px 5px}
+ .chatitem .del{padding:9px 5px}
+ .new{font-size:12px;padding:10px 3px}
+ .messages{padding:14px}
+ header{font-size:17px}
+ .msg{max-width:95%}
 }
 </style>
 </head>
+
 <body>
+
 <aside class="sidebar">
-<div class="logo">✦ Qalam AI</div>
-<button class="new" onclick="newChat()">＋ چاتی نوێ</button>
-<div style="color:#91a8ca;margin-bottom:8px">مێژووی چاتەکان</div>
-<div class="history" id="history"></div>
+ <div class="logo">✦ Qalam AI</div>
+
+ <button class="new" onclick="newChat()">
+ ＋ چاتی نوێ
+ </button>
+
+ <div style="color:#91a8ca;margin-bottom:8px">
+ مێژووی چاتەکان
+ </div>
+
+ <div class="history" id="history"></div>
 </aside>
 
 <main class="main">
-<header>Qalam AI <span style="color:#55aaff">●</span></header>
-<div class="messages" id="messages"></div>
-<form class="inputarea" id="form">
-<input id="prompt" placeholder="پرسیارەکەت بنووسە..." autocomplete="off">
-<button class="send">ناردن</button>
-</form>
-<div class="note">Qalam AI — یاریدەدەری زیرەکی دەستکرد</div>
+
+ <header>
+  <span>Qalam AI</span>
+  <span class="status">● Online</span>
+ </header>
+
+ <div class="messages" id="messages"></div>
+
+ <form class="inputarea" id="form">
+  <input
+   id="prompt"
+   placeholder="پرسیارەکەت بنووسە..."
+   autocomplete="off"
+   maxlength="4000"
+  >
+  <button class="send" id="send">ناردن</button>
+ </form>
+
+ <div class="note">
+ Qalam AI — یاریدەدەری زیرەکی دەستکرد
+ </div>
+
 </main>
 
 <script>
-let chats = JSON.parse(localStorage.getItem("qalam_chats") || "[]");
+
+const API_URL =
+ "https://qalam-ai.ayanmalik20106.workers.dev/";
+
+let chats = [];
+
+try {
+ chats = JSON.parse(
+  localStorage.getItem("qalam_chats") || "[]"
+ );
+ if (!Array.isArray(chats)) chats = [];
+} catch {
+ chats = [];
+}
+
 let active = null;
+let sending = false;
 
 function save(){
- localStorage.setItem("qalam_chats",JSON.stringify(chats));
+ localStorage.setItem(
+  "qalam_chats",
+  JSON.stringify(chats)
+ );
 }
 
 function newChat(){
- const chat={id:Date.now(),title:"چاتی نوێ",messages:[]};
+ const chat = {
+  id:Date.now(),
+  title:"چاتی نوێ",
+  messages:[]
+ };
+
  chats.unshift(chat);
- active=chat.id;
+ active = chat.id;
+
  save();
  render();
+
+ document.getElementById("prompt").focus();
 }
 
 function openChat(id){
- active=id;
+ active = id;
  render();
 }
 
 function deleteChat(id){
- chats=chats.filter(c=>c.id!==id);
- if(active===id) active=chats.length?chats[0].id:null;
+ chats = chats.filter(c => c.id !== id);
+
+ if(active === id){
+  active = chats.length ? chats[0].id : null;
+ }
+
  save();
  render();
 }
 
 function currentChat(){
- return chats.find(c=>c.id===active);
+ return chats.find(c => c.id === active);
 }
 
 function render(){
- const list=document.getElementById("history");
- list.innerHTML="";
- chats.forEach(c=>{
-  const row=document.createElement("div");
-  row.className="chatitem";
-  const open=document.createElement("button");
-  open.textContent=c.title;
-  open.onclick=()=>openChat(c.id);
-  const del=document.createElement("button");
-  del.className="del";
-  del.textContent="×";
-  del.title="سڕینەوە";
-  del.onclick=()=>deleteChat(c.id);
+
+ const list = document.getElementById("history");
+ list.innerHTML = "";
+
+ chats.forEach(c => {
+
+  const row = document.createElement("div");
+  row.className = "chatitem";
+
+  const open = document.createElement("button");
+  open.textContent = c.title;
+  open.onclick = () => openChat(c.id);
+
+  const del = document.createElement("button");
+  del.className = "del";
+  del.textContent = "×";
+  del.title = "سڕینەوە";
+  del.onclick = () => deleteChat(c.id);
+
   row.append(open,del);
   list.append(row);
  });
 
- const area=document.getElementById("messages");
- area.innerHTML="";
- const chat=currentChat();
+ const area = document.getElementById("messages");
+ area.innerHTML = "";
 
- if(!chat || chat.messages.length===0){
-  area.innerHTML='<div class="welcome"><h1>✦ Qalam AI</h1><div>بەخێربێیت بۆ قەڵەم AI</div><div>پرسیارەکەت لێرە بنووسە...</div></div>';
+ const chat = currentChat();
+
+ if(!chat || chat.messages.length === 0){
+
+  area.innerHTML =
+   '<div class="welcome">' +
+   '<h1>✦ Qalam AI</h1>' +
+   '<div>بەخێربێیت بۆ قەڵەم AI</div>' +
+   '<div>پرسیارەکەت لێرە بنووسە...</div>' +
+   '</div>';
+
  }else{
-  chat.messages.forEach(m=>{
-   const div=document.createElement("div");
-   div.className="msg "+(m.role==="user"?"user":"bot");
-   div.textContent=m.text;
+
+  chat.messages.forEach(m => {
+
+   const div = document.createElement("div");
+
+   div.className =
+    "msg " + (m.role === "user" ? "user" : "bot");
+
+   div.textContent = m.text;
+
    area.append(div);
   });
  }
- area.scrollTop=area.scrollHeight;
+
+ area.scrollTop = area.scrollHeight;
 }
 
-document.getElementById("form").addEventListener("submit",function(e){
+async function sendMessage(e){
+
  e.preventDefault();
- const input=document.getElementById("prompt");
- const text=input.value.trim();
- if(!text)return;
- if(!currentChat())newChat();
- const chat=currentChat();
- chat.messages.push({role:"user",text:text});
- if(chat.messages.length===1)chat.title=text.slice(0,24);
+
+ if(sending) return;
+
+ const input = document.getElementById("prompt");
+ const send = document.getElementById("send");
+
+ const text = input.value.trim();
+
+ if(!text) return;
+
+ if(!currentChat()) newChat();
+
+ const chat = currentChat();
+
  chat.messages.push({
-  role:"assistant",
-  text:"سوپاس بۆ پەیامەکەت! بەشی چات و مێژووی Qalam AI کار دەکات. بەشی AI ـی ڕاستەقینە هێشتا پێویستی بە بەستنەوەی مۆدێلی AI هەیە."
+  role:"user",
+  text:text
  });
- input.value="";
+
+ if(chat.messages.length === 1){
+  chat.title = text.slice(0,24);
+ }
+
+ const loading = {
+  role:"assistant",
+  text:"تکایە چاوەڕێ بکە..."
+ };
+
+ chat.messages.push(loading);
+
+ input.value = "";
+ sending = true;
+ send.disabled = true;
+
  save();
  render();
-});
+
+ const history = chat.messages
+  .filter(m =>
+   (m.role === "user" || m.role === "assistant") &&
+   m !== loading
+  )
+  .slice(-12)
+  .map(m => ({
+   role:m.role,
+   content:m.text
+  }));
+
+ try {
+
+  const response = await fetch(API_URL,{
+   method:"POST",
+   headers:{
+    "Content-Type":"application/json"
+   },
+   body:JSON.stringify({
+    messages:history
+   })
+  });
+
+  const data = await response.json();
+
+  if(!response.ok || !data.success){
+   throw new Error(
+    data.error || "AI connection failed"
+   );
+  }
+
+  loading.text = data.response;
+
+ } catch(error){
+
+  console.error(error);
+
+  loading.text =
+   "ببورە، پەیوەندی بە Qalam AI نەکرا. " +
+   "تکایە دووبارە هەوڵ بدەوە.";
+
+ }
+
+ sending = false;
+ send.disabled = false;
+
+ save();
+ render();
+ input.focus();
+}
+
+document.getElementById("form")
+ .addEventListener("submit",sendMessage);
 
 if(chats.length){
- active=chats[0].id;
+ active = chats[0].id;
 }else{
  newChat();
 }
+
 render();
+
 </script>
 </body>
 </html>
